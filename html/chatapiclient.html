@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<div id="div1">
+</div>
+<br>
+<input id="input1" type="text" autofocus onkeypress="keypress()"><button onclick="submit()">Submit</button>
+
+<script>
+
+var userid;
+
+function submit(control) {
+    clearIdle();
+
+    var div = document.getElementById('div1')
+    
+    var input;
+    if (control) {
+        input = control;
+    }
+    else {
+        input = document.getElementById('input1').value;
+        document.getElementById('input1').value = "";
+        div.innerHTML += "> " + input + "<br>";
+    }
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://localhost:3000/reply?userid=" + userid + "&input=" + encodeURIComponent(input), true);
+    xhr.onload = function () {
+        var ret = JSON.parse(xhr.response);
+        div.innerHTML += ret.output + "<br>";
+        if (ret.idle) setIdle(ret.idle)
+    };
+    xhr.send();
+}
+
+function keypress(e) {
+    if (event.keyCode == 13)
+        submit();
+}
+
+// Autostart support - client can optionally call the server automatically on startup with [auto],
+// to signal that the bot can open with the initiative.
+//
+// This is a good time to send other context using additional parameters, such as the user's timezone offset, 
+// useragent, web page, geo location, or device id.
+
+document.addEventListener("DOMContentLoaded", function() {
+    var d = new Date();
+    var n = d.getTimezoneOffset();
+    setTimeout(function() {submit("[auto " + n + "]")}, 250);
+});
+
+
+// Idle support - allows the bot to detect a lull in the conversation and attempt to restart it.
+
+var idleTimeout;
+
+function setIdle(secs) {
+    clearIdle();
+    idleTimeout = setTimeout(onIdle.bind(null, secs), secs*1000);
+}
+
+function clearIdle() {
+    if (idleTimeout) {
+        clearTimeout(idleTimeout);
+        idleTimeout = 0;
+    }
+}
+
+function onIdle(n) {
+    idleTimeout = 0;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://localhost:3000/reply?userid=" + userid + "&input=" + encodeURIComponent("[idle " + n + "]"), true);
+    xhr.onload = function () {
+        var ret = JSON.parse(xhr.response);
+        div.innerHTML += ret.output + "<br>";
+    };
+    xhr.send();
+}
+
+// If you DON'T have a login/authentication system, then this  mechanism can at least give
+// you a stable userid that lets you remember a user from login to login, provided that they
+// login from the same device. Please refer also to privacy laws governing the use of cookies.
+
+// Try and read a userid from our cookie
+userid = getCookie("userid");
+
+// Otherwise we generate our own using the timestamp and some random digits
+if (!userid) {
+    userid = (new Date()).getTime().toString();
+    for (var i = 0; i <= 3; i++)
+        userid += Math.floor(Math.random()*10);
+    setCookie("userid", userid, 365);
+}
+
+function getCookie(name) {
+    var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return v ? v[2] : null;
+}
+
+function setCookie(name, value, days) {
+    var d = new Date;
+    d.setTime(d.getTime() + 24*60*60*1000*days);
+    document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+}
+
+</script>
+
+</body>
+</html>
