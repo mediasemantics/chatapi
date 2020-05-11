@@ -18,7 +18,7 @@ app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 
 // The Chatbot API endpoint
-var urlReply = "http://characterapi.com/reply";
+var urlReply = "http://mediasemantics.com/reply";
 
 
 app.get('/reply', function(req, res, next) {
