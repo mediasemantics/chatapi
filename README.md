@@ -2,7 +2,7 @@
 Server implementation of Chatbot API
 
 ## Overview
-This is the Reference Implementation for the [Media Semantics Chatbot API](https://aws.amazon.com/marketplace/pp/B06ZY1VBFZ), a cloud-based API available on the Amazon AWS Marketplace.
+This is the Reference Implementation for the [Media Semantics Chatbot API](https://aws.amazon.com/marketplace/pp/B088HFTD41), a cloud-based API available on the Amazon AWS Marketplace.
 
 For a detailed introduction to the Chatbot API, please read the [Chatbot API Tutorial](https://www.mediasemantics.com/apitutorial4.html). 
 
@@ -14,7 +14,7 @@ If you prefer, you can also install it directly on a web server. Please see this
 setting up an AWS EC2 instance using Apache and Node.js.
 
 ## Obtaining keys
-Use this [AWS Markeplace](https://aws.amazon.com/marketplace/pp/B06ZY1VBFZ) page to add the
+Use this [AWS Markeplace](https://aws.amazon.com/marketplace/pp/B088HFTD41) page to add the
 Chatbot service to your AWS account. You will receive codes by email that you will insert in the server.js file. You will be charged $0.001 per call to the 'reply' endpoint. There are no monthly minimums. 
 Charges will appear on your monthly AWS bill. The access key is the 8-digit key that is mailed to you when you add the Chatbot API to your AWS account. 
 
