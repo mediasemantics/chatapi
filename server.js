@@ -76,8 +76,6 @@ app.get('/reply', function(req, res, next) {
                     res.setHeader('content-type', 'application/json');
                     res.write(JSON.stringify({output:ret.output, idle:ret.idle}));
                     res.end();
-                    if (data.idle)
-                        setIdleTimer(data.idle);
                 });
             });
         });
