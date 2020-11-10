@@ -13,34 +13,30 @@
 
 var userid;
 
-function submit(control) {
-    clearIdle();
-
+function submit() {
+    var input = document.getElementById('input1').value;
+    document.getElementById('input1').value = "";
     var div = document.getElementById('div1')
-    
-    var input;
-    if (control) {
-        input = control;
-    }
-    else {
-        input = document.getElementById('input1').value;
-        document.getElementById('input1').value = "";
-        div.innerHTML += "> " + input + "<br>";
-    }
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', "http://localhost:3000/reply?userid=" + userid + "&input=" + encodeURIComponent(input), true);
-    xhr.onload = function () {
-        var ret = JSON.parse(xhr.response);
-        div.innerHTML += ret.output + "<br>";
-        if (ret.idle) setIdle(ret.idle)
-    };
-    xhr.send();
+    div.innerHTML += "> " + input + "<br>";
+    reply(input);
 }
 
 function keypress(e) {
     if (event.keyCode == 13)
         submit();
+}
+
+function reply(input) {
+    clearIdle();
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://localhost:3000/reply?userid=" + userid + "&input=" + encodeURIComponent(input), true);
+    xhr.onload = function () {
+        var ret = JSON.parse(xhr.response);
+        var div = document.getElementById('div1');
+        if (ret.output) div.innerHTML += ret.output + "<br>";
+        if (ret.idle) setIdle(ret.idle)
+    };
+    xhr.send();
 }
 
 // Autostart support - client can optionally call the server automatically on startup with [auto],
@@ -52,7 +48,7 @@ function keypress(e) {
 document.addEventListener("DOMContentLoaded", function() {
     var d = new Date();
     var n = d.getTimezoneOffset();
-    setTimeout(function() {submit("[auto " + n + "]")}, 250);
+    setTimeout(function() {reply("[auto " + n + "]")}, 250);
 });
 
 
@@ -73,14 +69,7 @@ function clearIdle() {
 }
 
 function onIdle(n) {
-    idleTimeout = 0;
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', "http://localhost:3000/reply?userid=" + userid + "&input=" + encodeURIComponent("[idle " + n + "]"), true);
-    xhr.onload = function () {
-        var ret = JSON.parse(xhr.response);
-        div.innerHTML += ret.output + "<br>";
-    };
-    xhr.send();
+    reply("[idle " + n + "]");
 }
 
 // If you DON'T have a login/authentication system, then this  mechanism can at least give

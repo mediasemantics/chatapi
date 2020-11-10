@@ -61,7 +61,7 @@ app.get('/reply', function(req, res, next) {
             }
             request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
                 if (err) return next(err);
-                else if (httpResponse.statusCode != 200) return next(new Error("chat error"))
+                else if (httpResponse.statusCode != 200) return next(new Error("chat error "+body))
                 let ret = JSON.parse(body);
                 
                 // Write the data back again
@@ -95,7 +95,7 @@ function sendControlIfNecessary(control, data, req, res, next, callback) {
     }
     request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
         if (err) return next(err);
-        else if (httpResponse.statusCode != 200) return next(new Error("chat error"))
+        else if (httpResponse.statusCode != 200) return next(new Error("chat error "+body))
         let ret = JSON.parse(body);
         callback(ret.data);
     });
