@@ -6,7 +6,7 @@ This is the Reference Implementation for the [Media Semantics Chatbot API](https
 
 For a detailed introduction to the Chatbot API, please read the [Chatbot API Tutorial](https://www.mediasemantics.com/apitutorial4.html). 
 
-You can see the Reference Implementation running [here](https://mediasemantics.com/chatapiclient.html) (Plain HTML) and [here](https://mediasemantics.com/webapp) (React).
+You can see the Reference Implementation running [here](https://mediasemantics.com/chatapiclient.html) (Plain HTML) and [here](https://mediasemantics.com/webapp/index.html) (React).
 
 ## Requirements
 This README assumes that you are able to view html pages using a local web server (i.e. using a url that begins with http://localhost) and that you are able to run Node.js. If you prefer, you can also install it directly on a web server. Please see this [tutorial](https://www.mediasemantics.com/apitutorial2.html) for tips on setting up an AWS EC2 instance using Apache and Node.js.
