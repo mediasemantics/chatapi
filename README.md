@@ -26,7 +26,7 @@ cd chatapi
 
 Install the required dependencies:
 ```
-npm update
+npm install
 ```
 
 Create a conversations subdirectory:
