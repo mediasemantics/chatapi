@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var request = require('request');
 
-// TODO set up your Chartbot API key here
+// TODO set up your Chatbot API key here
 var chatAPIKey = "xxxxxxxx";
 
 // TODO - this is a sample rulebase - change to your own rulebase
