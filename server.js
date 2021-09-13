@@ -18,10 +18,11 @@ app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 
 // The Chatbot API endpoint
-var urlReply = "http://mediasemantics.com/reply";
+var urlReply = "http://api.mediasemantics.com/reply";
 
 
 app.get('/reply', function(req, res, next) {
+    console.log("reply");
     if (!req.query.userid) throw new Error("missing userid");
     if (!req.query.input) throw new Error("missing input");
     
@@ -67,7 +68,6 @@ app.get('/reply', function(req, res, next) {
                 // Write the data back again
                 fs.writeFile(filename, JSON.stringify(ret.data), function(err) {
                     if (err) return next(err);
-                    
                     // Return the response
                     res.statusCode = 200;
                     if ((req.get("Origin")||"").indexOf("localhost") != -1) res.setHeader('Access-Control-Allow-Origin', req.get("Origin"));
