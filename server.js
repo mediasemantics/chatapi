@@ -6,8 +6,8 @@ var request = require('request');
 // TODO set up your Chatbot API key here
 var chatAPIKey = "xxxxxxxx";
 
-// TODO - this is a sample rulebase - change to your own rulebase
-var rulebaseURL = "http://s3-us-west-2.amazonaws.com/samples.mediasemantics.com/sample-5-6-20.json";
+// TODO - set up your own Mind and place the Mind Id (see http://www.mediasemantics.com/apitutorial4.html)
+var mindid = "xxxxxxx";
 
 // TODO set the path to your cache directory, and make sure to give it read/write permission, e.g. mkdir conversations && sudo chgrp apache conversations && sudo chmod g+w conversations
 var cachePrefix = "./conversations/";
@@ -35,7 +35,7 @@ app.get('/reply', function(req, res, next) {
         // No data available - treat as a new user
         if (err) {  
             data = {};
-            control = "[start]";
+            control = "[new]";
         }
         // Conversation data is available for this user
         else {  
@@ -47,60 +47,48 @@ app.get('/reply', function(req, res, next) {
             let elapsedMinutes = Math.floor((new Date() - lastModified) / 60000);
             // Add some context when there are long breaks in the conversation
             if (elapsedMinutes > 5)
-                control = "[restart " + elapsedMinutes + "]";
+                control = "[return " + elapsedMinutes + "]";
         }
         
-        // If we have synthesized a [start] or [restart n] event, send that first, ignore the output.
-        sendControlIfNecessary(control, data, req, res, next, function(data) {
-            
-            // Now send the user input (or [auto])
-            let params = {
-                key:chatAPIKey,
-                input:req.query.input,
-                data:JSON.stringify(data),
-                url:rulebaseURL
+        // autostart is translated to [new], [return], or [nav]
+        if (req.query.input == "[autostart]") {
+            if (control) {
+                req.query.input = control;
             }
-            request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
+            else {
+                req.query.input = "[nav]";
+            }
+        }
+        
+        // Now send the user input
+        let params = {
+            key:chatAPIKey,
+            input:req.query.input,
+            data:JSON.stringify(data),
+            mindid:mindid
+        }
+        request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
+            if (err) return next(err);
+            else if (httpResponse.statusCode != 200) return next(new Error("chat error "+body))
+            let ret = JSON.parse(body);
+            
+            // Write the data back again
+            fs.writeFile(filename, JSON.stringify(ret.data), function(err) {
                 if (err) return next(err);
-                else if (httpResponse.statusCode != 200) return next(new Error("chat error "+body))
-                let ret = JSON.parse(body);
-                
-                // Write the data back again
-                fs.writeFile(filename, JSON.stringify(ret.data), function(err) {
-                    if (err) return next(err);
-                    // Return the response
-                    res.statusCode = 200;
-                    if ((req.get("Origin")||"").indexOf("localhost") != -1) res.setHeader('Access-Control-Allow-Origin', req.get("Origin"));
-                    // TODO: adjust your domain for CORS protection
-                    // if ((req.get("Origin")||"").indexOf("yourdomain") != -1) res.setHeader('Access-Control-Allow-Origin', req.get("Origin"));
-                    res.setHeader('content-type', 'application/json');
-                    res.write(JSON.stringify({output:ret.output, idle:ret.idle}));
-                    res.end();
-                });
+                // Return the response
+                res.statusCode = 200;
+                if ((req.get("Origin")||"").indexOf("localhost") != -1) res.setHeader('Access-Control-Allow-Origin', req.get("Origin"));
+                // TODO: adjust your domain for CORS protection
+                //else if ((req.get("Origin")||"").indexOf("yourdomain.com") != -1) res.setHeader('Access-Control-Allow-Origin', req.get("Origin"));*/
+                res.setHeader('content-type', 'application/json');
+                res.write(JSON.stringify({output:ret.output, idle:ret.idle}));
+                res.end();
             });
         });
     });
 });
 
-
-// If control is defined, then sends a control input, then calls the callback with the new data. 
-// Otherwise, calls the callback with the existing data.
-function sendControlIfNecessary(control, data, req, res, next, callback) {
-    if (!control) return callback(data);
-    let params = {
-        key:chatAPIKey,
-        input:control,
-        data:JSON.stringify(data),
-        url:rulebaseURL
-    }
-    request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
-        if (err) return next(err);
-        else if (httpResponse.statusCode != 200) return next(new Error("chat error "+body))
-        let ret = JSON.parse(body);
-        callback(ret.data);
-    });
-}
-        
+ 
 app.listen(3000, function() {
   console.log('Listening on port 3000');
 });

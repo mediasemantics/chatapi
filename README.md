@@ -34,11 +34,14 @@ Create a conversations subdirectory:
 mkdir conversations
 ```
 
-Modify the server.js file to add your Chatbot API access credentials.
+Follow the [Chatbot API Tutorial](https://www.mediasemantics.com/apitutorial4.html) "Creating a Mind" section and obtain the mind id from the Mind's Info panel in the Chatbot dashboard.
+
+Modify the server.js file to add your Chatbot API access credentials and your mind id.
 ```
 nano server.js
 ```
 Replace 'xxxxxxxx' with the 8 digit key that was mailed to you when you signed up for Chatbot API.
+Replace 'xxxxxxx' with the 7 digit mind id.
 
 Save your changes.
 
