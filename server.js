@@ -64,7 +64,7 @@ app.get('/reply', function(req, res, next) {
         let params = {
             key:chatAPIKey,
             input:req.query.input,
-            data:JSON.stringify(data),
+            data:data,
             mindid:mindid
         }
         request.post({url:urlReply, form:params}, function (err, httpResponse, body) {            
