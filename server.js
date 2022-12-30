@@ -4,7 +4,7 @@ var fs = require('fs');
 var request = require('request');
 
 // TODO set up your Chatbot API key here
-var chatAPIKey = "xxxxxxxx";
+var chatAPIKey = "xxxxxxxxxxxxxxxxxxxxxxxxx";
 
 // TODO - set up your own Mind and place the Mind Id (see http://www.mediasemantics.com/apitutorial4.html)
 var mindid = "xxxxxxx";

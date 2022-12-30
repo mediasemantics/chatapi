@@ -12,7 +12,7 @@ You can see the Reference Implementation running [here](https://mediasemantics.c
 This README assumes that you are able to view html pages using a local web server (i.e. using a url that begins with http://localhost) and that you are able to run Node.js. If you prefer, you can also install it directly on a web server. Please see this [tutorial](https://www.mediasemantics.com/apitutorial2.html) for tips on setting up an AWS EC2 instance using Apache and Node.js.
 
 ## Obtaining keys
-Use this [AWS Markeplace](https://aws.amazon.com/marketplace/pp/B088HFTD41) page to add the Chatbot service to your AWS account. You will receive codes by email that you will insert in the server.js file. You will be charged $0.001 per call to the 'reply' endpoint. There are no monthly minimums. Charges will appear on your monthly AWS bill.
+Use this [AWS Markeplace](https://aws.amazon.com/marketplace/pp/B088HFTD41) page to add the Chatbot service to your AWS account. You will receive credentials by email to log onto your API dashboard. There you will generate an API key that you will insert in the server.js file. You will be charged $0.001 per call to the 'reply' endpoint. There are no monthly minimums. Charges will appear on your monthly AWS bill.
 
 ## Installation
 
@@ -40,7 +40,7 @@ Modify the server.js file to add your Chatbot API access credentials and your mi
 ```
 nano server.js
 ```
-Replace 'xxxxxxxx' with the 8 digit key that was mailed to you when you signed up for Chatbot API.
+Replace 'xxxxxxxxxxxxxxxxxxxxxxxxx' with the 25 character API Key from the API Dashboard.
 Replace 'xxxxxxx' with the 7 digit mind id.
 
 Save your changes.
